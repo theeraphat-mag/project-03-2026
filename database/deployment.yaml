@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:15
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "password123"
+        - name: POSTGRES_DB
+          value: "mydb"
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: init-db
+          mountPath: /docker-entrypoint-initdb.d/
+        # --- ส่วนที่เพิ่มใหม่ ---
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql/data # ตำแหน่งที่ Postgres เก็บข้อมูลจริง
+          subPath: postgres-db
+        # ----------------------
+      volumes:
+      - name: init-db
+        configMap:
+          name: postgres-init-script
+      # --- ส่วนที่เพิ่มใหม่ ---
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: postgres-pvc
+      # ----------------------
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+spec:
+  ports:
+  - port: 5432
+  selector:
+    app: postgres
