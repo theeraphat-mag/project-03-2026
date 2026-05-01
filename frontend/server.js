@@ -17,6 +17,14 @@ const postCounter = new client.Counter({
 register.registerMetric(postCounter);
 
 app.get('/', (req, res) => {
+    // const status = req.query.status;
+    // let message = '';
+
+    // if (status === 'success') {
+    //     message = '<p style="color: green;">✅ Post successfully!</p>';
+    // } else if (status === 'error') {
+    //     message = '<p style="color: red;">❌ Something went wrong.</p>';
+    // }
     res.send(`<form method="POST" action="/post"><input type="text" name="message"><button type="submit">Send</button></form>`);
 });
 
