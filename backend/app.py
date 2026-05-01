@@ -1,17 +1,26 @@
 from flask import Flask, request, jsonify
+from prometheus_flask_exporter import PrometheusMetrics # เพิ่ม library
 import psycopg2
 import os
 
 app = Flask(__name__)
+metrics = PrometheusMetrics(app) # สร้าง endpoint /metrics ให้อัตโนมัติ
+
+# เพิ่มข้อมูล Static Info ให้ Prometheus
+metrics.info('app_info', 'Backend Application info', version='1.0.0')
 
 def get_db_connection():
-    conn = psycopg2.connect(
-        host=os.getenv('DB_HOST'),
-        database=os.getenv('DB_NAME'),
-        user=os.getenv('DB_USER'),
-        password=os.getenv('DB_PASS')
+    return psycopg2.connect(
+        host='192.168.199.233',
+        database='mydatabase',
+        user='user',
+        password='password',
+        port=5432
+        # host=os.getenv('localhost'),
+        # database=os.getenv('mydatabase'),
+        # user=os.getenv('user'),
+        # password=os.getenv('password')
     )
-    return conn
 
 @app.route('/add', methods=['POST'])
 def add_message():
