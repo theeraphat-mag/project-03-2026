@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 
 app.post('/post', async (req, res) => {
     try {
-        const backendUrl = process.env.BACKEND_URL || 'http://192.168.199.233:5000';
+        const backendUrl = process.env.BACKEND_URL || 'http://192.168.199.233:30500';
         await axios.post(`${backendUrl}/add`, { content: req.body.message });
         postCounter.inc(); // เพิ่มค่า Metric เมื่อมีคนโพสต์สำเร็จ
         res.send('Success!');
