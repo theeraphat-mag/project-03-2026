@@ -2,16 +2,11 @@ pipeline {
     agent any
     stages {
         stage('Checkout') {
-            steps {
-                cleanWs()
-                withCredentials([usernamePassword(credentialsId: 'github', 
-                                 usernameVariable: 'USER', 
-                                 passwordVariable: 'PASS')]) {
-                    
-                    // เรียกใช้ผ่านตัวแปร $USER และ $PASS
-                        sh "git clone https://$USER:$PASS@github.com/tapootum/project-03-2026.git ."
-                    }
-                // ดึง Code จาก Git
+           steps {
+                    // ไม่ต้องใส่ cleanWs() และไม่ต้องใส่ checkout scm ซ้ำ 
+                    // เพราะ Jenkins ทำ Checkout ให้เสร็จแล้วตั้งแต่ต้น Stage
+                    echo "Source code is already checked out by Jenkins."
+                    sh "ls -la" // ลองใส่เพื่อเช็คดูว่าไฟล์ backend ยังอยู่ไหม
                 }
             }
 
